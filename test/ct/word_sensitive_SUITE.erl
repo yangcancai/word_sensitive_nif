@@ -88,4 +88,12 @@ query_total_weight(_) ->
     ?assertEqual(#{1 => 4, 2 => 3}, word_sensitive_nif:query_cate_weight(Ref, <<"abcd">>)),
 
     ?assertEqual([<<"abc">>, <<"bc">>, <<"cd">>], word_sensitive_nif:query(Ref, <<"abcd">>)),
+
+    ok = word_sensitive_nif:add_key_word(Ref, <<"历史"/utf8>>),
+    ok = word_sensitive_nif:add_key_word(Ref, <<"物理"/utf8>>),
+    word_sensitive_nif:build(Ref),
+    ?assertEqual([<<"abc">>, <<"bc">>, <<"cd">>], word_sensitive_nif:query(Ref, <<"abcd">>)),
+    ?assertEqual([<<"历史"/utf8>>], word_sensitive_nif:query(Ref, <<"我要上历史课"/utf8>>)),
+    ?assertEqual([<<"abc">>, <<"bc">>, <<"历史"/utf8>>],
+                 word_sensitive_nif:query(Ref, <<"abc我要上历史课"/utf8>>)),
     ok.
