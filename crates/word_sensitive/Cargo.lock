@@ -89,9 +89,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "1.0.72"
+version = "1.0.73"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1e8cdbefb79a9a5a65e0db8b47b723ee907b7c7f8496c76a1770b5c310bab82"
+checksum = "f71489ff30030d2ae598524f61326b902466f72a0fb1a8564c001cc63425bcc7"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -128,7 +128,7 @@ checksum = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
 [[package]]
 name = "word_sensitive"
 version = "0.1.2"
-source = "git+https://github.com/yangcancai/word_sensitive.git?branch=unsafe_trie#5923ec652615d541c1d34d90c0156a6b241c1e39"
+source = "git+https://github.com/yangcancai/word_sensitive.git?branch=unsafe_trie#c040803c1cd91c1fe7c4a9f88a76721a47cda8e1"
 
 [[package]]
 name = "word_sensitive_nif"

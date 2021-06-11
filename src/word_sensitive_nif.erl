@@ -1,7 +1,10 @@
 -module(word_sensitive_nif).
 
 %% API
--export([new/0, new/1, add_key_word/2, build/1, query/2, clear/1]).  %% new resource
+-export([new/0, new/1, add_key_word/2, add_key_word_ext/3, build/1, query/2,
+         query_total_weight/2, query_cate_weight/2, clear/1]).
+
+                     %% new resource
 
             %% clear resource
 
@@ -13,6 +16,8 @@
 -type key_words() :: [binary()].
 
 -opaque word_sensitive() :: reference().
+
+-include("word_sensitive_nif.hrl").
 
 -export_type([word_sensitive/0]).
 
@@ -27,12 +32,24 @@ new(_Opts) ->
 add_key_word(_Ref, _Keywords) ->
     not_loaded(?LINE).
 
+-spec add_key_word_ext(Ref :: word_sensitive(), Keywords :: key_words(), Ext :: #ext{}) ->
+                          ok.
+add_key_word_ext(_Ref, _Keywords, _Ext) ->
+    not_loaded(?LINE).
+
 -spec build(Ref :: word_sensitive()) -> ok.
 build(_Ref) ->
     not_loaded(?LINE).
 
 -spec query(Ref :: word_sensitive(), Text :: binary()) -> ok.
 query(_Ref, _Text) ->
+    not_loaded(?LINE).
+
+-spec query_total_weight(Ref :: word_sensitive(), Text :: binary()) -> integer().
+query_total_weight(_Ref, _Text) ->
+    not_loaded(?LINE).
+
+query_cate_weight(_Ref, _Text) ->
     not_loaded(?LINE).
 
 -spec clear(Ref :: word_sensitive()) -> ok.

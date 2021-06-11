@@ -21,27 +21,47 @@
 // @end
 // Created : 2021-06-11T07:21:46+00:00
 //-------------------------------------------------------------------
+use word_sensitive::trie::NodeExt;
+use rustler::types::tuple::get_tuple;
+use rustler::{NifResult, Term};
+use rustler::error::Error;
+#[derive(Clone)]
+pub struct Ext{
+	pub cate: usize,
+	pub weight: usize,
+	pub len: usize
+}
 
-extern crate core;
-extern crate rustler;
-extern crate serde;
-extern crate word_sensitive;
-mod atoms;
-mod options;
-mod nif;
-mod ext;
-// define nif api
-rustler::init!(
-    "word_sensitive_nif",
-    [
-        nif::new,
-        nif::clear,
-        nif::add_key_word,
-        nif::add_key_word_ext,
-        nif::build,
-        nif::query,
-        nif::query_total_weight,
-        nif::query_cate_weight
-    ],
-    load = nif::on_load
-);
+impl NodeExt for Ext{
+	fn get_len(&self) -> usize{
+	  self.len
+	}
+	fn get_weight(&self) -> usize{
+		self.weight
+	}
+	fn get_cate(&self) -> usize{
+		self.cate
+	}
+	fn eq(&self, other: &Self) -> bool{
+		self.len == other.len
+	}
+}
+impl <'a> rustler::Decoder<'a> for Ext{
+	fn decode(term: Term<'a>) -> NifResult<Self> {
+		if term.is_tuple(){
+			match get_tuple(term){
+				Ok(t) => {
+					Ok(Ext{
+						cate:t[1].decode().unwrap(),
+						weight:t[2].decode().unwrap(),
+						len:t[3].decode().unwrap()
+					})
+				},
+				Err(_) =>
+				Err(Error::BadArg)
+			}
+		}else{
+			Err(Error::BadArg)
+		}
+	}
+}
