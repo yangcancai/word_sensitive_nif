@@ -128,7 +128,8 @@ checksum = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
 [[package]]
 name = "word_sensitive"
 version = "0.1.2"
-source = "git+https://github.com/yangcancai/word_sensitive.git?branch=unsafe_trie#c040803c1cd91c1fe7c4a9f88a76721a47cda8e1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aefb1231227c9b3d88d1b859deca4a1b67d64d7005beb5a412363b7a49efde7d"
 
 [[package]]
 name = "word_sensitive_nif"
