@@ -45,6 +45,7 @@ impl NifwordSensitive{
     }
     // clear
     fn clear(&mut self) {
+        self.data = Trie::default();
     }
     fn add_key_word_ext(&mut self, msg: &[u8], ext: Ext) {
         self.data.add_key_word_ext(msg.to_vec(), ext);

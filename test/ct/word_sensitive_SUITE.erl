@@ -32,7 +32,7 @@
 -define(APP, word_sensitive_nif).
 
 all() ->
-    [query_total_weight].
+    [query_total_weight, clear].
 
 init_per_suite(Config) ->
     {ok, _} = application:ensure_all_started(?APP),
@@ -96,4 +96,14 @@ query_total_weight(_) ->
     ?assertEqual([<<"历史"/utf8>>], word_sensitive_nif:query(Ref, <<"我要上历史课"/utf8>>)),
     ?assertEqual([<<"abc">>, <<"bc">>, <<"历史"/utf8>>],
                  word_sensitive_nif:query(Ref, <<"abc我要上历史课"/utf8>>)),
+    ok.
+
+clear(_) ->
+    {ok, Ref} = word_sensitive_nif:new(),
+    ok = word_sensitive_nif:add_key_word(Ref, <<"abc">>),
+    word_sensitive_nif:build(Ref),
+    Result = word_sensitive_nif:query(Ref, <<"abc">>),
+    ?assertEqual([<<"abc">>], Result),
+    ok = word_sensitive_nif:clear(Ref),
+    ?assertEqual([], word_sensitive_nif:query(Ref, <<"abc">>)),
     ok.
