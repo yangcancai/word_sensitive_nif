@@ -10,7 +10,20 @@ A library for sensitive string matching, the implementation language is rust/erl
 * 3. Build
 * 4. Query Some Things
 
+## Dependencies
+
 ```erlang
+{deps, 
+[
+	{word_sensitive_nif,{git, "https://github.com/yangcancai/word_sensitive_nif.git", {branch,"main"}}}
+]
+}.
+```
+## Clone to Develop 
+
+```erlang
+$ git clone https://github.com/yangcancai/word_sensitive_nif.git
+$ cd word_sensitive_nif
 $ make shell
 # ./tool.sh replace_config
 ./rebar3 as test shell
