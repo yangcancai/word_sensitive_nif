@@ -32,7 +32,7 @@
 -define(APP, word_sensitive_nif).
 
 all() ->
-    [query_total_weight, clear].
+    [query_total_weight, clear, word_sensitive].
 
 init_per_suite(Config) ->
     {ok, _} = application:ensure_all_started(?APP),
@@ -74,12 +74,12 @@ query_total_weight(_) ->
                                         <<"bc">>,
                                         #ext{cate = 2,
                                              len = 2,
-                                             weigh = 3}),
+                                             weight = 3}),
     word_sensitive_nif:add_key_word_ext(Ref,
                                         <<"cd">>,
                                         #ext{cate = 1,
                                              len = 2,
-                                             weigh = 3}),
+                                             weight = 3}),
 
     word_sensitive_nif:build(Ref),
     ?assertEqual(4, word_sensitive_nif:query_total_weight(Ref, <<"abc">>)),
@@ -106,4 +106,16 @@ clear(_) ->
     ?assertEqual([<<"abc">>], Result),
     ok = word_sensitive_nif:clear(Ref),
     ?assertEqual([], word_sensitive_nif:query(Ref, <<"abc">>)),
+    ok.
+
+word_sensitive(_) ->
+    {ok, Ref} = word_sensitive:new(),
+    ok = word_sensitive:add_key_word(Ref, <<"abc">>),
+    word_sensitive:build(Ref),
+    ?assertEqual([<<"abc">>], word_sensitive:query(Ref, <<"abcd">>)),
+    ok = word_sensitive:add_key_word(Ref, <<"bc">>, 10),
+    ok = word_sensitive:add_key_word(Ref, <<"ce">>, 2, 20),
+    word_sensitive:build(Ref),
+    ?assertEqual(#{1 => 11, 2 => 20}, word_sensitive:query_cate_weight(Ref, <<"abce">>)),
+    ?assertEqual(31, word_sensitive:query_total_weight(Ref, <<"abce">>)),
     ok.
