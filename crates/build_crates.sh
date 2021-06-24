@@ -10,7 +10,8 @@ cmd_exists(){
 }
 cmd_exists cargo
 if [ $? -eq '0' ]; then
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    source $HOME/.cargo/env
 else
     echo "Rust already install."
 fi
