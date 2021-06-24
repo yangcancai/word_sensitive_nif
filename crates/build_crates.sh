@@ -1,5 +1,19 @@
 #!/bin/bash
 mkdir -p ./priv
+cmd_exists(){
+	local ret=0;
+	command -v $1 >/dev/null 2>&1 || { local ret=1; }
+	if [ "$ret" -ne 0 ]; then
+		return 0;
+	fi
+	return 1
+}
+cmd_exists cargo
+if [ $? -eq '0' ]; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+else
+    echo "Rust already install."
+fi
 update(){
     cargo update --manifest-path=crates/word_sensitive/Cargo.toml 
 }
