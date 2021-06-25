@@ -60,10 +60,16 @@ impl NifwordSensitive{
         self.data.query_total_weight(text) 
     }
     fn query_cate_weight(&self, text: &[u8]) -> HashMap<usize,usize>{
-        self.data.query_cate_weight(text) 
+        self.data.query_cate_weight(text)
     }
-    fn query_all<'a>(&self, text: &'a [u8]) -> (usize, HashMap<usize, (usize, Vec<&'a [u8]>)>){
-        self.data.query_all(text)
+    fn query_all<'a>(&self, text: &'a [u8]) -> (usize, HashMap<usize, (usize, Vec<String>)>){
+        let (totalweight, mut map) = self.data.query_all(text);
+        let mut new_map :HashMap<usize,(usize,Vec<String>)> = HashMap::new();
+        // Update all values
+        for (cate, (weight, val)) in map.iter_mut() {
+            new_map.insert(*cate, (*weight, (*val).iter().map(|x|self.u8_to_string(x)).collect()));
+        }
+        (totalweight, new_map)
     }
     fn u8_to_string(&self, msg: &[u8]) -> String{
         let a = String::from_utf8_lossy(msg);

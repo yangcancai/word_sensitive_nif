@@ -119,6 +119,6 @@ word_sensitive(_) ->
     ?assertEqual(#{1 => 11, 2 => 20}, word_sensitive:query_cate_weight(Ref, <<"abce">>)),
     ?assertEqual(31, word_sensitive:query_total_weight(Ref, <<"abce">>)),
 
-    ?assertEqual({31, #{1 => {11, ["abc", "bc"]}, 2 => {20, ["ce"]}}},
+    ?assertEqual({31, #{1 => {11, [<<"abc">>, <<"bc">>]}, 2 => {20, [<<"ce">>]}}},
                  word_sensitive:query_all(Ref, <<"abce">>)),
     ok.
