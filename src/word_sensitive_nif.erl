@@ -25,7 +25,7 @@
 
 %% API
 -export([new/0, new/1, add_key_word/2, add_key_word_ext/3, build/1, query/2,
-         query_total_weight/2, query_cate_weight/2, clear/1]).
+         query_total_weight/2, query_cate_weight/2, query_all/2, clear/1]).
 
                      %% new resource
 
@@ -73,6 +73,9 @@ query_total_weight(_Ref, _Text) ->
     not_loaded(?LINE).
 
 query_cate_weight(_Ref, _Text) ->
+    not_loaded(?LINE).
+
+query_all(_Ref, _Text) ->
     not_loaded(?LINE).
 
 -spec clear(Ref :: word_sensitive()) -> ok.

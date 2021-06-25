@@ -28,7 +28,7 @@
 -author("yangcancai").
 
 -export([new/0, new/1, add_key_word/2, add_key_word/3, add_key_word/4, build/1, query/2,
-         query_total_weight/2, query_cate_weight/2, clear/1]).
+         query_total_weight/2, query_cate_weight/2, query_all/2, clear/1]).
 
 -dialyzer({[nowarn_function],
            [add_key_word/2,
@@ -70,6 +70,11 @@ query_total_weight(Ref, Text) when is_reference(Ref), is_binary(Text) ->
 
 query_cate_weight(Ref, Text) when is_reference(Ref), is_binary(Text) ->
     word_sensitive_nif:query_cate_weight(Ref, Text).
+
+-spec query_all(Ref :: reference(), Text :: binary()) ->
+                   {TotalWeight :: integer(), #{1 => {Weight :: integer(), [Keyword :: binary()]}}}.
+query_all(Ref, Text) when is_reference(Ref), is_binary(Text) ->
+    word_sensitive_nif:query_all(Ref, Text).
 
 clear(Ref) when is_reference(Ref) ->
     word_sensitive_nif:clear(Ref).

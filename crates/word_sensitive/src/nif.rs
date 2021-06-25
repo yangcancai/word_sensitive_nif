@@ -62,6 +62,9 @@ impl NifwordSensitive{
     fn query_cate_weight(&self, text: &[u8]) -> HashMap<usize,usize>{
         self.data.query_cate_weight(text) 
     }
+    fn query_all<'a>(&self, text: &'a [u8]) -> (usize, HashMap<usize, (usize, Vec<&'a [u8]>)>){
+        self.data.query_all(text)
+    }
     fn u8_to_string(&self, msg: &[u8]) -> String{
         let a = String::from_utf8_lossy(msg);
         match a{
@@ -144,7 +147,12 @@ fn query_cate_weight<'a>(env: Env<'a>, resource: ResourceArc<NifwordSensitiveRes
     let list = rs.query_cate_weight(&text);
     Ok(list.encode(env))
 }
-
+#[rustler::nif]
+fn query_all<'a>(env: Env<'a>, resource: ResourceArc<NifwordSensitiveResource>, text: LazyBinary<'a>) -> NifResult<Term<'a>> {
+    let rs = resource.read();
+    let list = rs.query_all(&text);
+    Ok(list.encode(env))
+}
 // =================================================================================================
 // helpers
 // =================================================================================================

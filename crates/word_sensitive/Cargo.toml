@@ -12,5 +12,5 @@ crate-type = ["cdylib","rlib"]
 [dependencies]
 rustler = "0.22.0-rc.0"
 serde = { version = "1.0", features = ["derive"] }
-# word_sensitive = {git="https://github.com/yangcancai/word_sensitive.git", branch = "main"}
-word_sensitive = "0.1.2"
+word_sensitive = {git="https://github.com/yangcancai/word_sensitive.git", branch = "main"}
+#word_sensitive = "0.1.2"

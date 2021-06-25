@@ -41,7 +41,8 @@ rustler::init!(
         nif::build,
         nif::query,
         nif::query_total_weight,
-        nif::query_cate_weight
+        nif::query_cate_weight,
+        nif::query_all
     ],
     load = nif::on_load
 );
