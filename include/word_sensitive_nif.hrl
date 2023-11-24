@@ -29,6 +29,6 @@
 -define(H_word_sensitive_nif, true).
 
 -record(ext,
-        {cate = 1 :: pos_integer(), weight = 1 :: pos_integer(), len = 0 :: pos_integer()}).
+        {cate = #{}, len = 0 :: pos_integer()}).
 
 -endif.

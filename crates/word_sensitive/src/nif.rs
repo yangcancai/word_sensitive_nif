@@ -32,6 +32,7 @@ use options::NifwordSensitiveOptions;
 use word_sensitive::Trie;
 use ext::Ext;
 use std::collections::HashMap;
+use word_sensitive::trie::NodeExt;
 // =================================================================================================
 // resource
 // =================================================================================================
@@ -53,23 +54,41 @@ impl NifwordSensitive{
     fn build(&mut self){
         self.data.build();
     }
-    fn query<'a>(&self, text: &'a [u8]) -> Vec<String> {
+    fn query(&self, text: &[u8]) -> Vec<String> {
         self.data.query(text).iter().map(|x|self.u8_to_string(x)).collect()
     }
     fn query_total_weight(&self, text: &[u8]) -> usize {
         self.data.query_total_weight(text) 
     }
     fn query_cate_weight(&self, text: &[u8]) -> HashMap<usize,usize>{
-        self.data.query_cate_weight(text)
-    }
-    fn query_all<'a>(&self, text: &'a [u8]) -> (usize, HashMap<usize, (usize, Vec<String>)>){
-        let (totalweight, mut map) = self.data.query_all(text);
-        let mut new_map :HashMap<usize,(usize,Vec<String>)> = HashMap::new();
-        // Update all values
-        for (cate, (weight, val)) in map.iter_mut() {
-            new_map.insert(*cate, (*weight, (*val).iter().map(|x|self.u8_to_string(x)).collect()));
+        let mut result: HashMap<usize, usize> = HashMap::new();
+        self.data.query_ext(text).iter().for_each(|(_i, x)| {
+            for (cate, height) in &x.cates{
+            if let Some(e) = result.get_mut(cate) {
+                *e += *height;
+            } else {
+                result.insert(*cate, *height);
+            }
         }
-        (totalweight, new_map)
+         });
+         result
+    }
+    fn query_all(&self, text: &[u8]) -> (usize, HashMap<usize, (usize, Vec<String>)>){
+        let mut total_weight = 0;
+        let mut result: HashMap<usize, (usize, Vec<String>)> = HashMap::new();
+        self.data.query_ext(text).iter().for_each(|(i, x)| {
+            for (cate, height) in &x.cates{
+            if let Some((e, keywords)) = result.get_mut(cate) {
+                *e += *height;
+                total_weight += *height;
+                (*keywords).push(self.u8_to_string(&text[*i - x.get_len()..*i]));
+            } else {
+                total_weight += *height;
+                result.insert(*cate, (*height, vec![self.u8_to_string(&text[*i - x.get_len()..*i])]));
+            }
+        }
+         });
+        (total_weight, result)
     }
     fn u8_to_string(&self, msg: &[u8]) -> String{
         let a = String::from_utf8_lossy(msg);
@@ -126,7 +145,9 @@ fn build(env: Env, resource: ResourceArc<NifwordSensitiveResource>) -> NifResult
 #[rustler::nif]
 fn add_key_word<'a>(env: Env<'a>, resource: ResourceArc<NifwordSensitiveResource>, keyword: LazyBinary<'a>) -> NifResult<Term<'a>> {
     let mut rs = resource.write();
-    rs.add_key_word_ext(&keyword, Ext{cate:1,len: keyword.len(), weight:1});
+    let mut h = HashMap::new();
+    h.insert(1, 1);
+    rs.add_key_word_ext(&keyword, Ext{cates: h,len: keyword.len()});
    Ok(ok().encode(env)) 
 }
 #[rustler::nif]

@@ -25,25 +25,13 @@
 use rustler::{Decoder, NifResult, Term};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, PartialEq, Clone, Copy, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Clone, Copy, Debug, Default)]
 pub struct NifwordSensitiveOptions {
     pub bitmap_size: Option<usize>,
     pub items_count: Option<usize>,
     pub capacity: Option<usize>,
     pub rotate_at: Option<usize>,
     pub fp_rate: Option<f64>,
-}
-
-impl Default for NifwordSensitiveOptions {
-    fn default() -> NifwordSensitiveOptions {
-        NifwordSensitiveOptions {
-            bitmap_size: None,
-            items_count: None,
-            capacity: None,
-            rotate_at: None,
-            fp_rate: None,
-        }
-    }
 }
 
 impl<'a> Decoder<'a> for NifwordSensitiveOptions {

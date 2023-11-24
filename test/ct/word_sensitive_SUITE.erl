@@ -72,20 +72,21 @@ query_total_weight(_) ->
 
     word_sensitive_nif:add_key_word_ext(Ref,
                                         <<"bc">>,
-                                        #ext{cate = 2,
-                                             len = 2,
-                                             weight = 3}),
+                                        #ext{cate = #{2 => 3, 4 => 10},
+                                             len = 2}),
     word_sensitive_nif:add_key_word_ext(Ref,
                                         <<"cd">>,
-                                        #ext{cate = 1,
-                                             len = 2,
-                                             weight = 3}),
+                                        #ext{cate = #{1 => 3},
+                                             len = 2
+                                             }),
 
     word_sensitive_nif:build(Ref),
-    ?assertEqual(4, word_sensitive_nif:query_total_weight(Ref, <<"abc">>)),
-    ?assertEqual(#{1 => 1, 2 => 3}, word_sensitive_nif:query_cate_weight(Ref, <<"abc">>)),
-    ?assertEqual(7, word_sensitive_nif:query_total_weight(Ref, <<"abcd">>)),
-    ?assertEqual(#{1 => 4, 2 => 3}, word_sensitive_nif:query_cate_weight(Ref, <<"abcd">>)),
+
+    ?assertEqual({14,#{1 => {1,[<<"abc">>]},2 => {3,[<<"bc">>]}, 4 => {10, [<<"bc">>]}}}, word_sensitive_nif:query_all(Ref, <<"abc">>)),
+    ?assertEqual(14, word_sensitive_nif:query_total_weight(Ref, <<"abc">>)),
+    ?assertEqual(#{1 => 1, 2 => 3, 4 => 10}, word_sensitive_nif:query_cate_weight(Ref, <<"abc">>)),
+    ?assertEqual(17, word_sensitive_nif:query_total_weight(Ref, <<"abcd">>)),
+    ?assertEqual(#{1 => 4, 2 => 3, 4 => 10}, word_sensitive_nif:query_cate_weight(Ref, <<"abcd">>)),
 
     ?assertEqual([<<"abc">>, <<"bc">>, <<"cd">>], word_sensitive_nif:query(Ref, <<"abcd">>)),
 

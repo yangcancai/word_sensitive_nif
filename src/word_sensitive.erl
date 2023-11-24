@@ -51,13 +51,13 @@ add_key_word(Ref, Keyword) when is_reference(Ref), is_binary(Keyword) ->
 
 add_key_word(Ref, Keyword, Weight)
     when is_reference(Ref), is_integer(Weight), is_binary(Keyword) ->
-    add_key_word(Ref, Keyword, #ext{weight = Weight});
+    add_key_word(Ref, Keyword, #ext{cate = #{1 => Weight}});
 add_key_word(Ref, Keyword, #ext{} = Ext) when is_reference(Ref), is_binary(Keyword) ->
     word_sensitive_nif:add_key_word_ext(Ref, Keyword, Ext#ext{len = erlang:size(Keyword)}).
 
 add_key_word(Ref, Keyword, Cate, Weight)
     when is_reference(Ref), is_integer(Weight), is_integer(Cate) ->
-    add_key_word(Ref, Keyword, #ext{weight = Weight, cate = Cate}).
+    add_key_word(Ref, Keyword, #ext{cate = #{ Cate => Weight}}).
 
 build(Ref) when is_reference(Ref) ->
     word_sensitive_nif:build(Ref).

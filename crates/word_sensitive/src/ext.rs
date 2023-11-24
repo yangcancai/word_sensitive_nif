@@ -25,22 +25,24 @@ use word_sensitive::trie::NodeExt;
 use rustler::types::tuple::get_tuple;
 use rustler::{NifResult, Term};
 use rustler::error::Error;
+use std::collections::HashMap;
 #[derive(Clone)]
 pub struct Ext{
-	pub cate: usize,
-	pub weight: usize,
+	pub cates: HashMap<usize, usize>,
 	pub len: usize
 }
-
 impl NodeExt for Ext{
 	fn get_len(&self) -> usize{
 	  self.len
 	}
 	fn get_weight(&self) -> usize{
-		self.weight
+		self.cates.values().cloned().sum()
 	}
 	fn get_cate(&self) -> usize{
-		self.cate
+		match self.cates.keys().min(){
+			Some(v) => *v,
+			None => 0
+		}
 	}
 	fn eq(&self, other: &Self) -> bool{
 		self.len == other.len
@@ -52,9 +54,8 @@ impl <'a> rustler::Decoder<'a> for Ext{
 			match get_tuple(term){
 				Ok(t) => {
 					Ok(Ext{
-						cate:t[1].decode().unwrap(),
-						weight:t[2].decode().unwrap(),
-						len:t[3].decode().unwrap()
+						cates:t[1].decode().unwrap(),
+						len:t[2].decode().unwrap()
 					})
 				},
 				Err(_) =>
